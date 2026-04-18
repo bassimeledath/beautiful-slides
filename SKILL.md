@@ -457,6 +457,31 @@ Low-tech test that catches half the sins software misses: **squint at the slide 
 
 If a fonts directory is available, point LibreOffice at it so your Manrope / Public Sans / Inter calls resolve; otherwise expect silent fallback to a default sans.
 
+## Charts
+
+Reach for a chart when the evidence *is* the story — a revenue bridge, a retention cohort, a conversion funnel, a dashboard-scorecard of KPIs, a density grid. Do not reach for a chart to decorate a narrative slide; a Number Hammer or direct-labeled table usually wins. When the chart *is* the slide, use the bundled `charts/` pack: five native python-pptx templates, theme-aware, load-bearing.
+
+The five templates and when to use them:
+
+- **bar** — discrete comparisons across categories ("which bucket wins"). Grouped 2-series supported.
+- **line** — trends over ordered x (time, cohort age). 1–N series; last series can be emphasized.
+- **kpi** — hero-number tile with label, value, delta. Compose 2–4 in a row for a scorecard.
+- **funnel** — conversion / narrowing stages (pipeline, signup drop-off). 4–7 stages.
+- **heatmap** — grid of colored cells, intensity between `bg` and `primary` (hour × weekday, segment × month). Best at ≥ 4×4.
+
+Every template exposes exactly one function with the same signature:
+
+```python
+def render(slide, data, tokens, bounds):
+    """Draw chart onto `slide` inside `bounds` (x, y, w, h in EMU), styled by `tokens`."""
+```
+
+`tokens` is a dict with keys `primary`, `accent`, `text`, `muted`, `bg`, `font_display`, `font_body`, `font_mono`, `font_size_base_pt`, `radius_px`. Pull these from the mode you picked in the Mood → Mode step — charts must use the same palette and type as the rest of the deck. Never hardcode a color inside a chart call.
+
+See `charts/INDEX.md` for the full interface, `charts/MODE_TOKENS.md` for exact token dicts per mode, and each template's `docs.md` + `example.py` for the `data` shape. Rendered per-mode previews live in `charts/<template>/renders/*.png`.
+
+Charts in this pack are **native python-pptx shapes** — rectangles, lines, textboxes — not rasterized PNGs. They stay editable in PowerPoint, they scale without blur, and they pass `check_bounds.py`. Do not wrap them in a matplotlib `add_picture` detour.
+
 ## File layout in this skill
 
 ```
@@ -465,6 +490,10 @@ beautiful-slides/
   scripts/
     check_bounds.py     # canvas-bounds enforcer (run after save)
     render_preview.py   # soffice + pdftoppm convenience wrapper
+  charts/               # five themed chart templates (bar, line, kpi, funnel, heatmap)
+    INDEX.md            # shared signature + picker guide
+    INTERFACE.md        # authoritative interface reference
+    MODE_TOKENS.md      # per-mode token dicts
   examples/             # optional reference decks
 ```
 
