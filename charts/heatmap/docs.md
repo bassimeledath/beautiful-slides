@@ -40,4 +40,4 @@ data = {
 
 ## Proof
 
-`python example.py` writes 5 decks into `./renders/`, one per mode. Passed.
+`python example.py` writes `example-<mode>.pptx` at the chart root, one per mode. Passed.

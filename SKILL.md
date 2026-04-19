@@ -48,34 +48,32 @@ The generator's first job is to classify the deck's mood from the brief — scan
 
 | Mood cues in brief | Mode name | Palette / type stance | Layout stance |
 |---|---|---|---|
-| "Apple keynote", "cinematic", "OLED", "stage" | `keynote-dark` | near-black bg, off-white type, single electric accent, display serif OR grotesque at 84–120pt | full-bleed, asymmetric, one hero element |
-| "board", "read-ahead", "Bain", "Economist" | `boardroom` | white bg, charcoal text, single muted accent, tabular figures | dense-but-aligned, takeaway titles, small type (14–18pt) |
-| "Linear", "Vercel", "Stripe Docs", "changelog" | `tech-docs` | flat bg, single accent, mono for code/metrics, geist-like sans | thin rules, direct labels, no ornament |
+| "Apple keynote", "cinematic", "OLED", "stage" | `sv-keynote` | near-black bg, off-white type, single electric accent, display serif OR grotesque at 84–120pt | full-bleed, asymmetric, one hero element |
+| "board", "read-ahead", "Bain", "Economist" | `consulting-boardroom` | white bg, charcoal text, single muted accent, tabular figures | dense-but-aligned, takeaway titles, small type (14–18pt) |
+| "New Yorker", "Monocle", "literary", "editorial" | `editorial-magazine` | warm paper bg, ink black, wine-red accent, serif display + serif body | hairlines, literate column rhythm, generous leading |
 | "Kenya Hara", "Muji", "Kinfolk", "craft" | `craft-minimal` | warm off-white bg, near-black, optional muted olive/stone used once | huge margins, 1 image per slide, serif display as punctuation |
 | "Figma Config", "Notion launch", "Linear launch", "playful" | `playful-marketing` | warm off-white + one orange-ish accent, custom grotesque display | oversize headlines, asymmetric but disciplined |
-| (default) | `default-light` | warm off-white bg, near-black text, one accent, system sans | safe 12-col grid |
 
 ### Authoring examples
 
-- Brief says "Series B pitch on a big OLED, cinematic, confident, quiet, expensive" → pick `keynote-dark`. Do NOT use gradients. Do NOT use 3 colors. Use ONE accent, black bg, single 120pt hero number on slide 2.
-- Brief says "internal board read-ahead for Q3 portfolio review, Economist-style, dense" → pick `boardroom`. Do NOT use oversized display type. Do NOT use a dark bg. Use takeaway titles, 14–18pt body, one muted accent for the single KPI that matters.
+- Brief says "Series B pitch on a big OLED, cinematic, confident, quiet, expensive" → pick `sv-keynote`. Do NOT use gradients. Do NOT use 3 colors. Use ONE accent, black bg, single 120pt hero number on slide 2.
+- Brief says "internal board read-ahead for Q3 portfolio review, Economist-style, dense" → pick `consulting-boardroom`. Do NOT use oversized display type. Do NOT use a dark bg. Use takeaway titles, 14–18pt body, one muted accent for the single KPI that matters.
 
 ### Mode discipline (explicit ban)
 
-Once a mode is picked, do not mix in elements from another mode. If the brief signals two modes, pick the dominant one from the LAST stated style sentence. A deck that is 70% `keynote-dark` and 30% `tech-docs` reads as inconsistent; a deck that is 100% `keynote-dark` reads as intentional, even if the mode choice is debatable. Consistency beats optimality.
+Once a mode is picked, do not mix in elements from another mode. If the brief signals two modes, pick the dominant one from the LAST stated style sentence. A deck that is 70% `sv-keynote` and 30% `editorial-magazine` reads as inconsistent; a deck that is 100% `sv-keynote` reads as intentional, even if the mode choice is debatable. Consistency beats optimality.
 
 ### Mode tokens
 
-Recommended tokens per mode. Use these verbatim or tighten them — do not invent a fourth hue.
+Recommended tokens per mode. Use these verbatim or tighten them — do not invent a fourth hue. The authoritative per-mode token dict (with full chart-compatible keys) lives in `charts/MODE_TOKENS.md`; the table below is the deck-authoring shorthand.
 
 | Mode | bg | fg | muted | accent | display face | body face |
 |---|---|---|---|---|---|---|
-| `keynote-dark` | `#05070A` | `#F5F7FA` | `#9AA4B2` | `#21D4FD` | Manrope ExtraBold | Manrope Medium |
-| `boardroom` | `#FFFFFF` | `#101828` | `#475467` | `#0F4C81` | Public Sans Semibold | Public Sans Regular |
-| `tech-docs` | `#F5F7FB` | `#111827` | `#667085` | `#174CD3` | Geist Sans Semibold | Geist Sans Regular |
+| `sv-keynote` | `#05070A` | `#F5F7FA` | `#9AA4B2` | `#21D4FD` | Manrope ExtraBold | Manrope Medium |
+| `consulting-boardroom` | `#FFFFFF` | `#101828` | `#475467` | `#0F4C81` | Public Sans Semibold | Public Sans Regular |
+| `editorial-magazine` | `#F6F1E8` | `#181514` | `#6F675F` | `#8C2F39` | Fraunces | Newsreader |
 | `craft-minimal` | `#FCFBF8` | `#22201C` | `#7B776F` | `#7C8571` | Instrument Serif | Instrument Sans |
 | `playful-marketing` | `#FFF4EB` | `#1B1B1F` | `#6E6A73` | `#FF7A00` | Bricolage Grotesque Bold | Plus Jakarta Sans Medium |
-| `default-light` | `#F8F7F4` | `#111111` | `#4B5563` | `#1E40AF` | Inter Semibold | Inter Regular |
 
 If a font is not installed, LibreOffice will silently substitute. Either install the font or switch the mode's face to something you know resolves — do not ship without verifying the rendered output.
 
@@ -264,7 +262,7 @@ run.font.size = Pt(44)
 run.font.color.rgb = RGBColor(0xF5, 0xF7, 0xFA)
 ```
 
-A Number Hammer (slide 2 or 3 of most keynote-dark decks):
+A Number Hammer (slide 2 or 3 of most sv-keynote decks):
 
 ```python
 hero = slide.shapes.add_textbox(Inches(1.0), Inches(2.2), Inches(11.3), Inches(3.2))
@@ -288,7 +286,7 @@ accent.fill.solid(); accent.fill.fore_color.rgb = RGBColor(0x21, 0xD4, 0xFD)
 accent.line.fill.background()
 ```
 
-Charts: prefer to render the chart with matplotlib to a PNG and `add_picture` it rather than use `python-pptx`'s native chart API. Native charts look Excel-y and are painful to style; a matplotlib PNG is a fixed artifact you control completely. Direct-label the series; remove gridlines; kill legends unless absolutely required.
+Charts: use the bundled `charts/` pack. It ships five native python-pptx templates (`bar`, `line`, `kpi`, `funnel`, `heatmap`), each exposing `render(slide, data, tokens, bounds)`. Pass the same mode tokens you picked in the Mood → Mode step — charts must share the deck's palette and type. If your chart type is not in the pack, add a new template under `charts/<type>/` following the shared signature. Do not rasterize a chart to PNG and `add_picture` it — that path is explicitly out of scope.
 
 Speaker notes (always fill them — the deck is a stage instrument, the notes are the script):
 
@@ -298,19 +296,21 @@ slide.notes_slide.notes_text_frame.text = "ARR hero. Pause. Let the number land.
 
 ## Data visualization
 
-Only five chart types are consistently defensible on slides:
+The shipped `charts/` pack is the only supported path for charts on a slide. It ships five native python-pptx templates:
 
-1. **Bar** — comparing categories; fastest to decode.
-2. **Line** — change over time when the trend, not every data point, is the story.
-3. **Dot plot** — precision with less ink; better than bars for category comparisons on a clean scale.
-4. **Scatter** — relationship, clustering, outliers. Annotate or do not bother.
-5. **Slope** — when only the start and end matter; cleaner than a full line chart for two-point change.
+1. **bar** — discrete comparisons across categories ("which bucket wins"). Grouped 2-series supported.
+2. **line** — trends over ordered x (time, cohort age). 1–N series; last series can be emphasized.
+3. **kpi** — hero-number tile with label, value, delta. Compose 2–4 in a row for a scorecard.
+4. **funnel** — conversion / narrowing stages (pipeline, signup drop-off). 4–7 stages.
+5. **heatmap** — grid of colored cells, intensity between `bg` and `primary` (hour × weekday, segment × month). Best at ≥ 4×4.
+
+If the chart you need is not one of these, add a new template under `charts/<type>/` following the same `render(slide, data, tokens, bounds)` signature. Do not reach for matplotlib or any PNG-rasterization detour.
 
 **Banned** on slides: dual-axis charts, 3D bars, pies with more than three slices, stacked area with more than four series, radar charts, donut charts with decorative holes pretending to be insight.
 
 **Direct-label the data, not the legend, whenever possible.** If you exceed five distinct series, split into small multiples or kill series until the chart has a voice again. Apply Tufte's data-ink ratio aggressively — any redundant gridline, legend box, axis title, border, bevel, or default shadow is theft. If the graphic can lose 30% of its non-data ink without losing meaning, remove it.
 
-A stat-hero slide is not a chart. One number, one context line, one comparator if truly necessary, one source. Do not wrap a hero number in axes or a lonely bar because software offered to.
+A stat-hero slide is not a chart. Use the `kpi` template, or a plain Number Hammer pattern — one number, one context line, one comparator if truly necessary, one source. Do not wrap a hero number in axes or a lonely bar because software offered to.
 
 ## Imagery and icons
 
@@ -453,7 +453,6 @@ Low-tech test that catches half the sins software misses: **squint at the slide 
 - `markitdown` — `pip install markitdown` (for the must-include self-audit)
 - LibreOffice with a headless `soffice` binary (macOS: `brew install --cask libreoffice`; Linux: package manager)
 - `pdftoppm` from poppler (macOS: `brew install poppler`; Linux: `poppler-utils`)
-- Optional: `matplotlib` for chart PNGs
 
 If a fonts directory is available, point LibreOffice at it so your Manrope / Public Sans / Inter calls resolve; otherwise expect silent fallback to a default sans.
 
@@ -494,7 +493,7 @@ beautiful-slides/
     INDEX.md            # shared signature + picker guide
     INTERFACE.md        # authoritative interface reference
     MODE_TOKENS.md      # per-mode token dicts
-  examples/             # optional reference decks
+    tokens.py           # shared MODES dict imported by every example.py
 ```
 
 ## Closing

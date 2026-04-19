@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 *.pyo
 .DS_Store
+
+# Transient render output from scripts/render_preview.py
+*-preview/
+*.pdf

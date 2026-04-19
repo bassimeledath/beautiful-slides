@@ -45,4 +45,4 @@ with its left/right label gutters.
 
 ## Proof
 
-`python example.py` renders one pptx per mode into `renders/`.
+`python example.py` writes `example-<mode>.pptx` at the chart root, one per mode.

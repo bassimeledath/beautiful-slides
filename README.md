@@ -8,7 +8,7 @@ A Claude Code skill for producing high-quality, editable PowerPoint decks (`.ppt
 
 The skill packages three load-bearing disciplines that measurably beat a strong baseline on a blind 5-scenario evaluation:
 
-1. **An explicit mood → mode classifier.** Before any slides exist, the generator picks exactly one mode (`keynote-dark`, `boardroom`, `tech-docs`, `craft-minimal`, `playful-marketing`, `default-light`) and commits to it for every slide. Consistency beats optimality.
+1. **An explicit mood → mode classifier.** Before any slides exist, the generator picks exactly one mode (`sv-keynote`, `consulting-boardroom`, `editorial-magazine`, `craft-minimal`, `playful-marketing`) and commits to it for every slide. Consistency beats optimality.
 2. **A canvas-bounds check.** After saving the `.pptx`, a small Python script walks every shape and asserts it lives inside the 16:9 canvas. Silent clipping is the single most common slop signal; this catches it deterministically.
 3. **A must-include self-audit.** After saving, the generator extracts the brief's must-include list and verifies each item is COVERED / MENTIONED / MISSING in the emitted deck (via markitdown), then patches until everything is COVERED.
 
@@ -41,7 +41,7 @@ System dependencies (install once):
 # macOS
 brew install --cask libreoffice
 brew install poppler
-pip install python-pptx markitdown matplotlib
+pip install python-pptx markitdown
 ```
 
 On Linux, install `libreoffice`, `poppler-utils`, and the same pip packages from your package manager.
@@ -73,7 +73,7 @@ beautiful-slides/
   scripts/
     check_bounds.py   # canvas-bounds enforcer (run after save)
     render_preview.py # soffice + pdftoppm convenience wrapper
-  examples/           # (optional) reference decks
+  charts/             # five themed chart templates (bar, line, kpi, funnel, heatmap)
 ```
 
 ## License
