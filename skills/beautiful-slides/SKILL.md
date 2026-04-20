@@ -1,6 +1,10 @@
 ---
 name: beautiful-slides
-description: Produce editable, visually disciplined PowerPoint decks (.pptx) from a brief. Use whenever a task mentions a deck, slides, a presentation, a .pptx file, or asks you to build/edit/inspect a slide deck. Uses python-pptx for fine control, LibreOffice for round-trip rendering, and enforces explicit mood→mode selection, a canvas-bounds check, and a must-include self-audit before declaring the deck done.
+description: "Produce editable, visually disciplined PowerPoint decks (.pptx) from a brief. Use whenever a task mentions a deck, slides, a presentation, a .pptx file, or asks you to build/edit/inspect a slide deck. Uses python-pptx for fine control, LibreOffice for round-trip rendering, and enforces explicit mood→mode selection, a canvas-bounds check, and a must-include self-audit before declaring the deck done."
+license: MIT
+version: "1.0.0"
+last_updated: "2026-04-19"
+user_invocable: true
 ---
 
 # Beautiful Slides
@@ -36,7 +40,7 @@ A small, boring cycle. Do not deviate — the discipline is the feature.
 3. **Write the outline.** One line per slide: `N. [pattern name] — [single message]`. Do not proceed until the outline covers every must-include. A pitch-deck default cadence is listed under "Deck structure".
 4. **Author in Python.** Use `python-pptx`. Create a new `Presentation`, set `slide_width = Inches(13.333)` and `slide_height = Inches(7.5)` for widescreen 16:9. Emit one slide at a time. Save.
 5. **Render to PNG.** Use `soffice --headless --convert-to pdf` then `pdftoppm -r 100` to turn the pptx into per-slide PNGs. Open slides 1, 2, and the final slide at minimum — do not skip this step.
-6. **Run the bounds check.** `python scripts/check_bounds.py out.pptx` must exit 0. Fix any violation and re-save.
+6. **Run the bounds check.** `python ${SKILL_DIR}/scripts/check_bounds.py out.pptx` must exit 0. Fix any violation and re-save.
 7. **Run the must-include self-audit.** Extract the brief's must-includes into a checklist, extract text from the pptx, and mark every item COVERED / MENTIONED / MISSING. Patch until all are COVERED.
 8. **Ship.**
 
@@ -65,7 +69,7 @@ Once a mode is picked, do not mix in elements from another mode. If the brief si
 
 ### Mode tokens
 
-Recommended tokens per mode. Use these verbatim or tighten them — do not invent a fourth hue. The authoritative per-mode token dict (with full chart-compatible keys) lives in `charts/MODE_TOKENS.md`; the table below is the deck-authoring shorthand.
+Recommended tokens per mode. Use these verbatim or tighten them — do not invent a fourth hue. The authoritative per-mode token dict (with full chart-compatible keys) lives in `${SKILL_DIR}/charts/MODE_TOKENS.md`; the table below is the deck-authoring shorthand.
 
 | Mode | bg | fg | muted | accent | display face | body face |
 |---|---|---|---|---|---|---|
@@ -286,7 +290,7 @@ accent.fill.solid(); accent.fill.fore_color.rgb = RGBColor(0x21, 0xD4, 0xFD)
 accent.line.fill.background()
 ```
 
-Charts: use the bundled `charts/` pack. It ships five native python-pptx templates (`bar`, `line`, `kpi`, `funnel`, `heatmap`), each exposing `render(slide, data, tokens, bounds)`. Pass the same mode tokens you picked in the Mood → Mode step — charts must share the deck's palette and type. If your chart type is not in the pack, add a new template under `charts/<type>/` following the shared signature. Do not rasterize a chart to PNG and `add_picture` it — that path is explicitly out of scope.
+Charts: use the bundled `${SKILL_DIR}/charts/` pack. It ships five native python-pptx templates (`bar`, `line`, `kpi`, `funnel`, `heatmap`), each exposing `render(slide, data, tokens, bounds)`. Pass the same mode tokens you picked in the Mood → Mode step — charts must share the deck's palette and type. If your chart type is not in the pack, add a new template under `${SKILL_DIR}/charts/<type>/` following the shared signature. Do not rasterize a chart to PNG and `add_picture` it — that path is explicitly out of scope.
 
 Speaker notes (always fill them — the deck is a stage instrument, the notes are the script):
 
@@ -296,7 +300,7 @@ slide.notes_slide.notes_text_frame.text = "ARR hero. Pause. Let the number land.
 
 ## Data visualization
 
-The shipped `charts/` pack is the only supported path for charts on a slide. It ships five native python-pptx templates:
+The shipped `${SKILL_DIR}/charts/` pack is the only supported path for charts on a slide. It ships five native python-pptx templates:
 
 1. **bar** — discrete comparisons across categories ("which bucket wins"). Grouped 2-series supported.
 2. **line** — trends over ordered x (time, cohort age). 1–N series; last series can be emphasized.
@@ -304,7 +308,7 @@ The shipped `charts/` pack is the only supported path for charts on a slide. It 
 4. **funnel** — conversion / narrowing stages (pipeline, signup drop-off). 4–7 stages.
 5. **heatmap** — grid of colored cells, intensity between `bg` and `primary` (hour × weekday, segment × month). Best at ≥ 4×4.
 
-If the chart you need is not one of these, add a new template under `charts/<type>/` following the same `render(slide, data, tokens, bounds)` signature. Do not reach for matplotlib or any PNG-rasterization detour.
+If the chart you need is not one of these, add a new template under `${SKILL_DIR}/charts/<type>/` following the same `render(slide, data, tokens, bounds)` signature. Do not reach for matplotlib or any PNG-rasterization detour.
 
 **Banned** on slides: dual-axis charts, 3D bars, pies with more than three slices, stacked area with more than four series, radar charts, donut charts with decorative holes pretending to be insight.
 
@@ -357,7 +361,7 @@ If any of these is present, fix in Python and re-render. Do not ship on a first 
 After saving, run the bundled script:
 
 ```bash
-python scripts/check_bounds.py path/to/out.pptx
+python ${SKILL_DIR}/scripts/check_bounds.py path/to/out.pptx
 ```
 
 It walks every shape on every slide and asserts `(left, top, width, height)` stays inside `12,192,000 × 6,858,000` EMU. Exits 0 if clean; exits 1 with a report of violations otherwise. Example violation line:
@@ -458,7 +462,7 @@ If a fonts directory is available, point LibreOffice at it so your Manrope / Pub
 
 ## Charts
 
-Reach for a chart when the evidence *is* the story — a revenue bridge, a retention cohort, a conversion funnel, a dashboard-scorecard of KPIs, a density grid. Do not reach for a chart to decorate a narrative slide; a Number Hammer or direct-labeled table usually wins. When the chart *is* the slide, use the bundled `charts/` pack: five native python-pptx templates, theme-aware, load-bearing.
+Reach for a chart when the evidence *is* the story — a revenue bridge, a retention cohort, a conversion funnel, a dashboard-scorecard of KPIs, a density grid. Do not reach for a chart to decorate a narrative slide; a Number Hammer or direct-labeled table usually wins. When the chart *is* the slide, use the bundled `${SKILL_DIR}/charts/` pack: five native python-pptx templates, theme-aware, load-bearing.
 
 The five templates and when to use them:
 
@@ -477,14 +481,14 @@ def render(slide, data, tokens, bounds):
 
 `tokens` is a dict with keys `primary`, `accent`, `text`, `muted`, `bg`, `font_display`, `font_body`, `font_mono`, `font_size_base_pt`, `radius_px`. Pull these from the mode you picked in the Mood → Mode step — charts must use the same palette and type as the rest of the deck. Never hardcode a color inside a chart call.
 
-See `charts/INDEX.md` for the full interface, `charts/MODE_TOKENS.md` for exact token dicts per mode, and each template's `docs.md` + `example.py` for the `data` shape. Rendered per-mode previews live in `charts/<template>/renders/*.png`.
+See `${SKILL_DIR}/charts/INDEX.md` for the full interface, `${SKILL_DIR}/charts/MODE_TOKENS.md` for exact token dicts per mode, and each template's `docs.md` + `example.py` for the `data` shape. Rendered per-mode previews live in `${SKILL_DIR}/charts/<template>/renders/*.png`.
 
 Charts in this pack are **native python-pptx shapes** — rectangles, lines, textboxes — not rasterized PNGs. They stay editable in PowerPoint, they scale without blur, and they pass `check_bounds.py`. Do not wrap them in a matplotlib `add_picture` detour.
 
 ## File layout in this skill
 
 ```
-beautiful-slides/
+${SKILL_DIR}/
   SKILL.md              # this file
   scripts/
     check_bounds.py     # canvas-bounds enforcer (run after save)
