@@ -1,5 +1,6 @@
 from pptx.dml.color import RGBColor
 from pptx.util import Emu, Pt
+from pptx.enum.shapes import MSO_SHAPE
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 
 
@@ -59,6 +60,7 @@ def _draw_trapezoid(slide, tl_x, tl_y, tr_x, bl_x, br_x, bottom_y, fill_hex):
 def render(slide, data, tokens, bounds):
     x, y, w, h = bounds
 
+    bg = tokens["bg"]
     primary = tokens["primary"]
     muted = tokens["muted"]
     text_c = tokens["text"]
@@ -66,6 +68,15 @@ def render(slide, data, tokens, bounds):
     font_body = tokens["font_body"]
     font_mono = tokens["font_mono"]
     base_pt = tokens["font_size_base_pt"]
+
+    # Background
+    bg_shape = slide.shapes.add_shape(
+        MSO_SHAPE.RECTANGLE, Emu(int(x)), Emu(int(y)),
+        Emu(int(w)), Emu(int(h)),
+    )
+    bg_shape.fill.solid()
+    bg_shape.fill.fore_color.rgb = _rgb(bg)
+    bg_shape.line.fill.background()
 
     stages = data.get("stages", [])
     if not stages:
@@ -175,7 +186,7 @@ def render(slide, data, tokens, bounds):
             _add_textbox(
                 slide,
                 funnel_x, conv_y, funnel_w, conv_h,
-                conv_text, font_mono, max(int(base_pt * 0.75), 8), muted,
+                conv_text, font_mono, max(int(base_pt * 0.75), 8), text_c,
                 align=PP_ALIGN.CENTER, bold=False, anchor=MSO_ANCHOR.MIDDLE,
             )
 

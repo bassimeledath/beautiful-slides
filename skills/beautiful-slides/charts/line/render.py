@@ -144,7 +144,7 @@ def render(slide, data, tokens, bounds):
 
     if y_label:
         _add_textbox(slide, x0 + pad, cursor_y, w0 - 2 * pad, sub_h,
-                     y_label, font_body, int(base_pt * 0.85), muted,
+                     y_label, font_body, int(base_pt * 0.85), text,
                      bold=False, align=PP_ALIGN.LEFT, anchor=MSO_ANCHOR.TOP)
         cursor_y += sub_h
 
@@ -241,7 +241,7 @@ def render(slide, data, tokens, bounds):
         _add_textbox(slide,
                      plot_x, plot_y + plot_h + x_tick_h + int(pad * 0.2),
                      plot_w, x_axis_label_h,
-                     x_label, font_body, int(base_pt * 0.85), muted,
+                     x_label, font_body, int(base_pt * 0.85), text,
                      bold=False, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.TOP)
 
     # Draw series
@@ -314,7 +314,7 @@ def render(slide, data, tokens, bounds):
                          last[1] - lbl_h / 2,
                          lbl_w, lbl_h,
                          str(name), font_body, tick_pt,
-                         color if color != muted else muted,
+                         text,
                          bold=is_primary_idx, align=PP_ALIGN.LEFT,
                          anchor=MSO_ANCHOR.MIDDLE)
 

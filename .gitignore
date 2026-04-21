@@ -6,3 +6,8 @@ __pycache__/
 # Transient render output from scripts/render_preview.py
 *-preview/
 *.pdf
+.dispatch/
+render_all_charts.py
+*.pptx
+render_all_templates.py
+rebuild_gallery.py

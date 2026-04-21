@@ -273,7 +273,7 @@ def _draw_vertical(slide, x, y, w, h, categories, series, colors, ticks, vmax,
         _add_text(
             slide, x, ty - lbl_h // 2, lbl_w, lbl_h,
             _fmt(t) + (suffix if t != 0 and i == len(ticks) - 1 else ""),
-            font_name=font_mono, size_pt=tick_pt, hex_color=muted,
+            font_name=font_mono, size_pt=tick_pt, hex_color=text_c,
             align=PP_ALIGN.RIGHT, anchor=MSO_ANCHOR.MIDDLE,
         )
         # hairline gridline across plot (skip zero which becomes baseline)
@@ -348,7 +348,7 @@ def _draw_horizontal(slide, x, y, w, h, categories, series, colors, ticks, vmax,
             slide, tx - int(Pt(tick_pt).emu * 2), plot_y + plot_h + int(Pt(tick_pt).emu * 0.3),
             int(Pt(tick_pt).emu * 4), tlh,
             _fmt(t) + (suffix if t != 0 and i == len(ticks) - 1 else ""),
-            font_name=font_mono, size_pt=tick_pt, hex_color=muted,
+            font_name=font_mono, size_pt=tick_pt, hex_color=text_c,
             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.TOP,
         )
         if i > 0:

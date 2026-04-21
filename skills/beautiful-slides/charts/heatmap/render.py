@@ -115,6 +115,16 @@ def render(slide, data, tokens, bounds):
     font_mono = tokens["font_mono"]
     base_pt = int(tokens["font_size_base_pt"])
     radius_px = int(tokens.get("radius_px") or 0)
+
+    # Background
+    bg_shape = slide.shapes.add_shape(
+        MSO_SHAPE.RECTANGLE, Emu(int(x)), Emu(int(y)),
+        Emu(int(w)), Emu(int(h)),
+    )
+    bg_shape.fill.solid()
+    bg_shape.fill.fore_color.rgb = _rgb(bg_hex)
+    bg_shape.line.fill.background()
+
     radius_emu = radius_px * 9525
 
     label_pt = max(7, int(round(base_pt * 0.72)))
@@ -172,7 +182,7 @@ def render(slide, data, tokens, bounds):
             cl,
             font_body,
             label_pt,
-            muted_hex,
+            text_hex,
             align=PP_ALIGN.CENTER,
             anchor=MSO_ANCHOR.MIDDLE,
         )
@@ -186,7 +196,7 @@ def render(slide, data, tokens, bounds):
             rl,
             font_body,
             label_pt,
-            muted_hex,
+            text_hex,
             align=PP_ALIGN.RIGHT,
             anchor=MSO_ANCHOR.MIDDLE,
         )
@@ -272,7 +282,7 @@ def render(slide, data, tokens, bounds):
         min_lbl,
         font_mono,
         legend_pt,
-        muted_hex,
+        text_hex,
         align=PP_ALIGN.LEFT,
         anchor=MSO_ANCHOR.TOP,
     )
@@ -282,7 +292,7 @@ def render(slide, data, tokens, bounds):
         max_lbl,
         font_mono,
         legend_pt,
-        muted_hex,
+        text_hex,
         align=PP_ALIGN.RIGHT,
         anchor=MSO_ANCHOR.TOP,
     )

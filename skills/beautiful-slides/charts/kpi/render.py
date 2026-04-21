@@ -59,6 +59,16 @@ def render(slide, data, tokens, bounds):
     font_mono = tokens["font_mono"]
     base_pt = tokens["font_size_base_pt"]
     radius_px = tokens.get("radius_px", 0) or 0
+
+    # Background
+    bg_shape = slide.shapes.add_shape(
+        MSO_SHAPE.RECTANGLE, Emu(int(x)), Emu(int(y)),
+        Emu(int(w)), Emu(int(h)),
+    )
+    bg_shape.fill.solid()
+    bg_shape.fill.fore_color.rgb = _rgb(bg_hex)
+    bg_shape.line.fill.background()
+
     dark = _is_dark_mode(bg_hex)
 
     # Tile background — subtle rounded rect with hairline border.
@@ -104,17 +114,21 @@ def render(slide, data, tokens, bounds):
     _add_textbox(slide, inner_x, inner_y, inner_w, label_h,
                  label.upper() if label else "",
                  font=font_body, size_pt=label_size,
-                 color_hex=muted_hex, bold=True, align=PP_ALIGN.LEFT)
+                 color_hex=text_hex, bold=True, align=PP_ALIGN.LEFT)
 
     # Value — hero number. Size based on tile height.
     value_pt_from_h = (h / 12700.0) * 0.22
     value_pt = max(36, min(int(value_pt_from_h), 96))
-    # Shrink if the string is long relative to width.
+    # Auto-size: reduce font when value string is long (> 6 chars)
+    val_len = max(1, len(value))
+    if val_len > 6:
+        value_pt = max(18, int(value_pt * 6.0 / val_len))
+    # Further shrink if estimated width still exceeds available width
     est_char_w_emu = Pt(value_pt).emu * 0.55
-    est_w = est_char_w_emu * max(1, len(value))
+    est_w = est_char_w_emu * val_len
     if est_w > inner_w:
         scale = inner_w / est_w
-        value_pt = max(28, int(value_pt * scale))
+        value_pt = max(14, int(value_pt * scale))
 
     value_h = Pt(value_pt).emu * 1.2
     value_y = inner_y + label_h + Pt(base_pt * 0.35).emu
@@ -151,16 +165,22 @@ def render(slide, data, tokens, bounds):
             # If primary is the same hue family as up-accent we already got,
             # fall back to muted to signal "attention" without clashing.
             if delta_color == accent_hex:
-                delta_color = muted_hex
+                delta_color = text_hex
             glyph = "\u25BC "  # ▼
         else:
-            delta_color = muted_hex
+            delta_color = text_hex
             glyph = ""
 
         delta_pt = max(10, int(base_pt * 0.95))
+        delta_str = f"{glyph}{delta}"
+        # Cap delta text: reduce font if string is long, truncate if extreme
+        if len(delta_str) > 25:
+            delta_str = delta_str[:22] + "..."
+        if len(delta_str) > 15:
+            delta_pt = max(8, int(delta_pt * 15.0 / len(delta_str)))
         delta_h = Pt(delta_pt).emu * 1.5
         _add_textbox(slide, inner_x, delta_y, inner_w, delta_h,
-                     f"{glyph}{delta}",
+                     delta_str,
                      font=font_mono, size_pt=delta_pt,
                      color_hex=delta_color, bold=False, align=PP_ALIGN.LEFT)
         delta_y_end = delta_y + delta_h
@@ -177,6 +197,6 @@ def render(slide, data, tokens, bounds):
         _add_textbox(slide, inner_x, foot_y, inner_w, foot_h,
                      footnote,
                      font=font_body, size_pt=foot_pt,
-                     color_hex=muted_hex, bold=False, align=PP_ALIGN.LEFT)
+                     color_hex=text_hex, bold=False, align=PP_ALIGN.LEFT)
 
     return tile
