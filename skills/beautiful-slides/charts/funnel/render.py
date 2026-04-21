@@ -61,6 +61,8 @@ def render(slide, data, tokens, bounds):
     x, y, w, h = bounds
 
     bg = tokens["bg"]
+    slide.background.fill.solid()
+    slide.background.fill.fore_color.rgb = _rgb(bg)
     primary = tokens["primary"]
     muted = tokens["muted"]
     text_c = tokens["text"]

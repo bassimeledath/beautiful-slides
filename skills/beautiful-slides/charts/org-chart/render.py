@@ -203,6 +203,8 @@ def render(slide, data, tokens, bounds):
     text_c = tokens["text"]
     muted = tokens["muted"]
     bg = tokens["bg"]
+    slide.background.fill.solid()
+    slide.background.fill.fore_color.rgb = _rgb(bg)
     font_display = tokens["font_display"]
     font_body = tokens["font_body"]
     base_pt = tokens["font_size_base_pt"]
