@@ -116,8 +116,6 @@ def render(slide, data, tokens, bounds):
 
     # Extract tokens
     bg_hex = tokens["bg"]
-    slide.background.fill.solid()
-    slide.background.fill.fore_color.rgb = RGBColor.from_string(bg_hex.lstrip("#"))
     primary_hex = tokens["primary"]
     accent_hex = tokens["accent"]
     text_hex = tokens["text"]

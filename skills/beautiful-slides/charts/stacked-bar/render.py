@@ -155,8 +155,6 @@ def render(slide, data, tokens, bounds):
     series = series[:5]  # cap at 5 segments
 
     bg = tokens["bg"]
-    slide.background.fill.solid()
-    slide.background.fill.fore_color.rgb = _rgb(bg)
     text_c = tokens["text"]
     muted = tokens["muted"]
     font_display = tokens["font_display"]

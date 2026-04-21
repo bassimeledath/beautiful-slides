@@ -142,8 +142,6 @@ def render(slide, data, tokens, bounds):
     series = series[:2]
 
     bg = tokens["bg"]
-    slide.background.fill.solid()
-    slide.background.fill.fore_color.rgb = _rgb(bg)
     primary = tokens["primary"]
     accent = tokens["accent"]
     text_c = tokens["text"]

@@ -50,8 +50,6 @@ def render(slide, data, tokens, bounds):
     footnote = data.get("footnote")
 
     bg_hex = tokens["bg"]
-    slide.background.fill.solid()
-    slide.background.fill.fore_color.rgb = RGBColor.from_string(bg_hex.lstrip("#"))
     text_hex = tokens["text"]
     muted_hex = tokens["muted"]
     primary_hex = tokens["primary"]

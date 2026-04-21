@@ -105,8 +105,6 @@ def _fmt_num(v):
 def render(slide, data, tokens, bounds):
     x0, y0, w0, h0 = bounds
     bg = tokens["bg"]
-    slide.background.fill.solid()
-    slide.background.fill.fore_color.rgb = _rgb(bg)
     primary = tokens["primary"]
     accent = tokens["accent"]
     text = tokens["text"]

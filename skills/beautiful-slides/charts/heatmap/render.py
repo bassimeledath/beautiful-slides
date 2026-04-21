@@ -107,8 +107,6 @@ def render(slide, data, tokens, bounds):
         vmax = vmin + 1.0
 
     bg_hex = tokens["bg"]
-    slide.background.fill.solid()
-    slide.background.fill.fore_color.rgb = RGBColor.from_string(bg_hex.lstrip("#"))
     primary_hex = tokens["primary"]
     text_hex = tokens["text"]
     muted_hex = tokens["muted"]

@@ -105,8 +105,6 @@ def render(slide, data, tokens, bounds):
     layout_hint = (data.get("layout") or "auto").lower()
 
     bg = tokens["bg"]
-    slide.background.fill.solid()
-    slide.background.fill.fore_color.rgb = _rgb(bg)
     text_hex = tokens["text"]
     font_display = tokens["font_display"]
     base_pt = int(tokens["font_size_base_pt"])
